@@ -1,0 +1,38 @@
+extends ./layout.jade
+
+block content
+  .container.container-fluid
+    .row.row-centered
+      .col-xs-12.col-centered
+        .winner-text
+          if info.probability < 45
+            | The red team is probably going to win this game! If you're on the blue team, do your best, we fail sometimes!
+          else if info.probability > 55
+            | The blue team is probably going to win this game! If you're on the red team, do your best, we fail sometimes!
+          else
+            | This is probably going to be a close game... you need to try hard if you want to win!
+        .row.row-centered
+          .col-xs-4.col-centered.col-team1
+            .row.top-text-team1
+              span.team-chance #{info.probability}%
+              span.team-title chance of winning
+            each val in info.participants
+              if val.teamId == 100
+                .row.row-champ.row-left
+                  .col-xs-12
+                    .col-icon
+                      img(src='http://ddragon.leagueoflegends.com/cdn/5.7.2/img/champion/#{val.codename}.png', width='64px', height='64px')
+                    .summoner= val.summonerName
+                    .champ= val.name
+          .col-xs-4.col-centered.col-team2
+            .row.top-text-team2
+              span.team-chance #{100-info.probability}%
+              span.team-title chance of winning
+            each val in info.participants
+              if val.teamId == 200
+                .row.row-champ-right.row-left
+                  .col-xs-12
+                    .col-icon-right
+                      img(src='http://ddragon.leagueoflegends.com/cdn/5.7.2/img/champion/#{val.codename}.png', width='64px', height='64px')
+                    .summoner-right= val.summonerName
+                    .champ-right= val.name

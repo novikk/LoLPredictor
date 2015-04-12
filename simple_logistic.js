@@ -3,6 +3,8 @@ function sumCoeffs(c) {
 }
 
 exports.getProbability = function(v) {
+	if (v.length != 10) return 0;
+	
 	vector1 = [];
 	vector2 = [];
 

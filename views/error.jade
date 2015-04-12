@@ -1,6 +1,8 @@
-extends layout
+extends ./layout.jade
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .container.container-fluid
+    .row.row-centered
+      .col-xs-12.col-centered
+        .winner-text
+          =error

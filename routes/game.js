@@ -29,9 +29,13 @@ var platforms_from_region = {
 // initialize champs
 var champs = JSON.parse(fs.readFileSync('champion.json', 'utf8'));
 var champs_ids = [];
+var champs_names = [];
+var champs_codenames = [];
 var totalChamps = 0;
 for (var champ in champs.data) {
 	champs_ids[champs.data[champ].key] = totalChamps++;
+	champs_names[champs.data[champ].key] = champs.data[champ].name;
+	champs_codenames[champs.data[champ].key] = champ;
 }
 
 function canSend() {
@@ -53,11 +57,11 @@ router.get('/:region/:summoner', function(req, res, next) {
 		res.send('pls wait');
 	} else {
 		// get summoner id
-		request(api_url + '/api/lol/' + req.params.region + '/v1.4/summoner/by-name/' + req.params.summoner + '/?api_key=' + api_key, function(err, resp, body) {
+		request(api_url + '/api/lol/' + req.params.region.toLowerCase() + '/v1.4/summoner/by-name/' + encodeURI(req.params.summoner) + '/?api_key=' + api_key, function(err, resp, body) {
 			if (resp.statusCode == 200) {
 				body = JSON.parse(body);
 				var summonerId = body[Object.keys(body)[0]].id;
-				request(api_url + '/observer-mode/rest/consumer/getSpectatorGameInfo/' + platforms_from_region[req.params.region] + '/' + summonerId + '/?api_key=' + api_key, function(err, resp, body) {
+				request(api_url + '/observer-mode/rest/consumer/getSpectatorGameInfo/' + platforms_from_region[req.params.region.toLowerCase()] + '/' + summonerId + '/?api_key=' + api_key, function(err, resp, body) {
 					if (resp.statusCode == 200) {
 						body = JSON.parse(body);
 						var playing_champs = [];
@@ -65,17 +69,20 @@ router.get('/:region/:summoner', function(req, res, next) {
 							playing_champs.push(champs_ids[body.participants[champ].championId]);
 						}
 
-						console.log(playing_champs);
-						console.log(simple_logistic.getProbability(playing_champs));
-						res.send(body);
+						body.probability = (simple_logistic.getProbability(playing_champs) * 100).toFixed(2);
+						for (var i = 0; i < body.participants.length; ++i) {
+							body.participants[i].name = champs_names[body.participants[i].championId];
+							body.participants[i].codename = champs_codenames[body.participants[i].championId];
+						}
+						res.render('game_view', {info: body});
 					} else {
-						res.send("Summoner not in game");
+						res.render('error', {error: "Summoner not in game"});
 					} 
 				});
 			} else if (resp.statusCode == 404) {
-				res.send("Summoner not found");
+				res.render('error', {error: "Summoner not found"});
 			} else {
-				res.send("Unknown error");
+				res.render('error', {error: "There was an error! Please try again"});
 			}
 		});
 	}

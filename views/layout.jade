@@ -1,7 +1,41 @@
 doctype html
-html
+html(lang='en')
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    title LoLPredictor
+    // Bootstrap
+    link(href='/bootstrap-3.3.4-dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/bootstrap-3.3.4-dist/css/bootstrap-select.min.css', rel='stylesheet')
+    link(href='/stylesheets/main.css', rel='stylesheet')
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
   body
+    .tittle
+       a(href='/')
+        h2 LoLPredictor
     block content
+
+  footer.footer
+    .container
+      p.text-muted
+        | LoLPredictor isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
+    // Include all compiled plugins (below), or include individual files as needed
+    script(src='/bootstrap-3.3.4-dist/js/bootstrap.min.js')
+    script(src='/bootstrap-3.3.4-dist/js/bootstrap-select.min.js')
+    script.
+      function changeLink() {
+      var form = document.getElementById('form-1') || null;
+      var summoner = document.getElementById('inputSummoner');
+      var region = document.getElementById('selectPicker');
+      if(form) {
+      form.action = '/game/'+region.options[region.selectedIndex].value+'/'+summoner.value
+      }
+      }

@@ -1,5 +1,28 @@
-extends layout
+extends ./layout.jade
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .container.container-fluid
+    .row.row-centered
+      .col-xs-12.col-centered
+        form#form-1.form-predict(action='http://google.com', method='get')
+          h4.form-predict-heading Type your summoner
+          label.sr-only(for='Your summonmer name') Your summoner name
+          input#inputSummoner.form-control.summoner-input(type='text', placeholder='Your summoner name', required='', autofocus='')
+          .select-div
+            select#selectPicker.selectpicker
+              option(value='na') North America
+              option(value='euw') Europe West
+              option(value='eune') Europe Nordic & East
+              option(value='br') Brazil
+              option(value='tr') Turkey
+              option(value='ru') Russia
+              option(value='lan') Latin America North
+              option(value='las') Latin America South
+              option(value='kr') Korea
+          button.btn.btn-primary.btn-block.predict-button(type='submit', onclick='changeLink()') Predict
+    .row.row-centered
+      .col-xs-1
+      .col-xs-10.info-box
+        p
+          | LoLPredictor is an app that predicts the potential result of an Ultra Rapid Fire game. By using the most advanced algorithms and technologies in data mining and machine learning, LolPredictor helps the user craft the ideal team to success in the most popular League of Legends game mode. To do so, the developers of LoLPredictor have carefully analized over 50,000 Ultra Rapid Fire games, all of them with a huge variety of champions compositions, with the aim of providing this unique tool its extreme accuracy. Don't be shy and try LoLPredictor!
+      .col-xs-1

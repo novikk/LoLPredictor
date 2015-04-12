@@ -11,7 +11,7 @@ var per = 1.0;
 var allowance = rate;
 var last_check = Date.now();
 var api_key = process.env.RIOT_API_KEY;
-var api_url = 'https://euw.api.pvp.net';
+var api_url = '.api.pvp.net';
 
 var platforms_from_region = {
 	"euw": "EUW1",
@@ -52,16 +52,17 @@ function canSend() {
 }
 
 router.get('/:region/:summoner', function(req, res, next) {
-	console.log(api_key);
+	var region = req.params.region.toLowerCase();
 	if (!canSend()) {
-		res.send('pls wait');
+		res.render('error', {error: "Our site is under heavy load. Please try in a few seconds!"});
 	} else {
 		// get summoner id
-		request(api_url + '/api/lol/' + req.params.region.toLowerCase() + '/v1.4/summoner/by-name/' + encodeURI(req.params.summoner) + '/?api_key=' + api_key, function(err, resp, body) {
+
+		request('https://' + region + api_url + '/api/lol/' + req.params.region.toLowerCase() + '/v1.4/summoner/by-name/' + encodeURI(req.params.summoner) + '/?api_key=' + api_key, function(err, resp, body) {
 			if (resp.statusCode == 200) {
 				body = JSON.parse(body);
 				var summonerId = body[Object.keys(body)[0]].id;
-				request(api_url + '/observer-mode/rest/consumer/getSpectatorGameInfo/' + platforms_from_region[req.params.region.toLowerCase()] + '/' + summonerId + '/?api_key=' + api_key, function(err, resp, body) {
+				request('https://' + region + api_url + '/observer-mode/rest/consumer/getSpectatorGameInfo/' + platforms_from_region[req.params.region.toLowerCase()] + '/' + summonerId + '/?api_key=' + api_key, function(err, resp, body) {
 					if (resp.statusCode == 200) {
 						body = JSON.parse(body);
 						var playing_champs = [];
@@ -82,6 +83,7 @@ router.get('/:region/:summoner', function(req, res, next) {
 			} else if (resp.statusCode == 404) {
 				res.render('error', {error: "Summoner not found"});
 			} else {
+				res.send(resp);
 				res.render('error', {error: "There was an error! Please try again"});
 			}
 		});

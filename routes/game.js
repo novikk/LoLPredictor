@@ -83,7 +83,6 @@ router.get('/:region/:summoner', function(req, res, next) {
 			} else if (resp.statusCode == 404) {
 				res.render('error', {error: "Summoner not found"});
 			} else {
-				res.send(resp);
 				res.render('error', {error: "There was an error! Please try again"});
 			}
 		});

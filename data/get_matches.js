@@ -9,7 +9,7 @@ var rate = 25.0;
 var per = 1.0;
 var allowance = rate;
 var last_check = Date.now();
-var api_key = 'f7abc750-e151-4ba8-bcb3-deaf2f65654b'
+var api_key = process.env.RIOT_API_KEY;
 var api_url = 'https://euw.api.pvp.net'
 // MI ID = 33409394
 
